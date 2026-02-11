@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🐶🐸 Will you be my Valentine?</title>
+  <meta name="description" content="A ridiculous Valentine page with floating puppies and frogs." />
+  <style>
+    :root{
+      --bg1:#ffb7d5;
+      --bg2:#b8f2ff;
+      --ink:#1e1e1e;
+      --card:#ffffffcc;
+      --card2:#ffffffee;
+      --yes:#26c281;
+      --no:#ff4d6d;
+      --shadow: 0 18px 50px rgba(0,0,0,.15);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--ink);
+      overflow:hidden;
+      background: radial-gradient(circle at 20% 10%, #fff6fb 0 25%, transparent 26%),
+                  radial-gradient(circle at 80% 20%, #f3fffe 0 30%, transparent 31%),
+                  linear-gradient(135deg, var(--bg1), var(--bg2));
+    }
+
+    /* Floating background */
+    .float-layer{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+      filter: drop-shadow(0 10px 10px rgba(0,0,0,.08));
+    }
+    .floater{
+      position:absolute;
+      font-size: clamp(26px, 3.2vw, 56px);
+      opacity:.95;
+      animation: drift linear infinite;
+      transform: translate3d(0,0,0);
+      user-select:none;
+    }
+    @keyframes drift{
+      from{ transform: translate3d(var(--x), 120vh, 0) rotate(0deg); }
+      to  { transform: translate3d(calc(var(--x) + var(--dx)), -30vh, 0) rotate(360deg); }
+    }
+
+    /* Main layout */
+    .wrap{
+      position:relative;
+      height:100%;
+      display:grid;
+      place-items:center;
+      padding:24px;
+    }
+    .card{
+      width:min(680px, 96vw);
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,.55);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      padding: clamp(18px, 3vw, 30px);
+      text-align:center;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 14px;
+      border-radius:999px;
+      background: rgba(255,255,255,.7);
+      border: 1px solid rgba(255,255,255,.7);
+      font-weight:700;
+      letter-spacing:.2px;
+    }
+    h1{
+      margin:14px 0 6px;
+      font-size: clamp(30px, 4.6vw, 54px);
+      line-height:1.05;
+    }
+    .sub{
+      margin:0 auto 18px;
+      max-width: 52ch;
+      font-size: clamp(14px, 2.2vw, 18px);
+      opacity:.92;
+    }
+
+    .panel{
+      margin-top: 18px;
+      background: var(--card2);
+      border: 1px solid rgba(255,255,255,.8);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .btnrow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      justify-content:center;
+      margin-top:14px;
+    }
+    button{
+      cursor:pointer;
+      border:none;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing:.2px;
+      transition: transform .08s ease, filter .2s ease;
+      box-shadow: 0 10px 24px rgba(0,0,0,.12);
+    }
+    button:active{ transform: scale(.98); }
+    .yes{ background: var(--yes); color:white; }
+    .no{ background: var(--no); color:white; }
+
+    .tiny{
+      margin-top: 14px;
+      font-size: 13px;
+      opacity:.75;
+    }
+
+    /* No-options area */
+    .noZone{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:center;
+      margin-top: 14px;
+    }
+    .noChoice{
+      background: rgba(255,255,255,.9);
+      color:#111;
+      border: 1px solid rgba(0,0,0,.08);
+      box-shadow:none;
+      font-weight:800;
+    }
+    .noChoice:hover{ filter: brightness(1.03); }
+
+    /* Success overlay */
+    .overlay{
+      position:fixed;
+      inset:0;
+      display:none;
+      place-items:center;
+      background: rgba(0,0,0,.28);
+      backdrop-filter: blur(6px);
+      z-index: 10;
+    }
+    .modal{
+      width:min(720px, 94vw);
+      background:white;
+      border-radius: 26px;
+      padding: 22px;
+      box-shadow: 0 25px 80px rgba(0,0,0,.28);
+      text-align:center;
+    }
+    .modal h2{
+      margin: 10px 0 6px;
+      font-size: clamp(26px, 4.2vw, 44px);
+    }
+    .modal p{
+      margin: 0 auto 14px;
+      max-width: 58ch;
+      opacity:.9;
+      line-height:1.5;
+    }
+    .confetti{
+      font-size: 34px;
+      margin-top: 6px;
+      user-select:none;
+    }
+
+    /* Wiggle hint */
+    .wiggle{
+      animation: wiggle .5s ease-in-out 2;
+    }
+    @keyframes wiggle{
+      0%,100%{ transform: rotate(0deg); }
+      25%{ transform: rotate(-3deg); }
+      75%{ transform: rotate(3deg); }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="float-layer" aria-hidden="true" id="floatLayer"></div>
+
+  <main class="wrap">
+    <section class="card" role="region" aria-label="Valentine card">
+      <div class="badge">💌 Official Valentine Application Form™ <span aria-hidden="true">🐶🐸</span></div>
+
+      <h1>Will you be my Valentine?</h1>
+      <p class="sub">
+        I brought puppies for emotional support, frogs for vibes, and a highly unqualified legal team
+        who insists this page is “extremely persuasive.”
+      </p>
+
+      <div class="panel">
+        <div style="font-size:34px; line-height:1.2;">🐶💖🐸</div>
+        <p class="sub" style="margin:10px auto 0;">
+          Please choose carefully. The “No” button is being audited and may experience… <b>feature creep</b>.
+        </p>
+
+        <div class="btnrow">
+          <button class="yes" id="yesBtn">Yes 💘</button>
+          <button class="no" id="noBtn">No 🙃</button>
+        </div>
+
+        <div class="noZone" id="noZone" aria-live="polite" aria-label="More options appear here"></div>
+
+        <div class="tiny">
+          (By clicking anything, you agree to receive an unlimited supply of corny compliments.)
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="Success message">
+    <div class="modal">
+      <div class="confetti">🎉✨💐✨🎉</div>
+      <h2>YAY!! It’s a YES!!</h2>
+      <p>
+        Congratulations 🥹 You have officially made me the happiest human on Earth.
+        A puppy just did a backflip. A frog started slow-clapping. This is historic.
+      </p>
+      <p>
+        <b>Next steps:</b> I owe you snacks, a cute date, and absolutely zero (0) annoying “I told you so’s.” 😇
+      </p>
+      <div class="btnrow">
+        <button class="yes" id="closeBtn">Close 💞</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Floating puppies & frogs ---
+    const layer = document.getElementById("floatLayer");
+    const emojis = ["🐶","🐕","🐾","🐸","🐶","🐸","💖","✨"]; // weighted a bit
+    const floatCount = 26;
+
+    function rand(min, max){ return Math.random() * (max - min) + min; }
+
+    for (let i=0; i<floatCount; i++){
+      const el = document.createElement("div");
+      el.className = "floater";
+      el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      const x = rand(0, 100);
+      const dx = rand(-20, 20);
+      const dur = rand(10, 22);
+      const delay = rand(-22, 0);
+      const size = rand(22, 62);
+
+      el.style.left = x + "vw";
+      el.style.setProperty("--x", x + "vw");
+      el.style.setProperty("--dx", dx + "vw");
+      el.style.animationDuration = dur + "s";
+      el.style.animationDelay = delay + "s";
+      el.style.fontSize = size + "px";
+      el.style.opacity = rand(0.55, 0.98);
+
+      layer.appendChild(el);
+    }
+
+    // --- Valentine logic ---
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn  = document.getElementById("noBtn");
+    const noZone = document.getElementById("noZone");
+    const overlay = document.getElementById("overlay");
+    const closeBtn = document.getElementById("closeBtn");
+
+    const noLines = [
+      "No… (but yes) 🥺",
+      "No (I panicked) 😳",
+      "No (misclick) 😅",
+      "No, I will be your Valentine 💘",
+      "No, but you’re cute so… yes 😌",
+      "No, but the puppies voted YES 🐶✅",
+      "No, but the frogs filed an appeal 🐸📄",
+      "No, but I already planned the snacks 🍟",
+      "No, but I’m literally smiling right now 😭",
+      "No, but yes, final answer 💞",
+      "Ok fine YES (don’t look at me) 🙈",
+      "YES (in all caps) YESSSSS ✨"
+    ];
+
+    let noClicks = 0;
+
+    function addNewNoOption(){
+      const label = noLines[Math.min(noClicks, noLines.length - 1)];
+      const btn = document.createElement("button");
+      btn.className = "noChoice";
+      btn.textContent = label;
+
+      // Clicking a "no" option also keeps escalating (and gently nudges toward Yes)
+      btn.addEventListener("click", () => {
+        noClicks++;
+        growYes();
+        addNewNoOption();
+        wiggleCard();
+      });
+
+      noZone.appendChild(btn);
+
+      // After a while, make it comically obvious
+      if (noClicks >= 6){
+        noBtn.textContent = "No (suspicious) 🕵️‍♀️";
+      }
+      if (noClicks >= 10){
+        noBtn.disabled = true;
+        noBtn.style.opacity = 0.55;
+        noBtn.style.cursor = "not-allowed";
+        noBtn.textContent = "No (retired) 🫡";
+      }
+    }
+
+    function growYes(){
+      // Increase the yes button size slightly each time (playful, not too obnoxious)
+      const scale = 1 + Math.min(noClicks, 12) * 0.06;
+      yesBtn.style.transform = `scale(${scale})`;
+    }
+
+    function wiggleCard(){
+      const card = document.querySelector(".card");
+      card.classList.remove("wiggle");
+      // Force reflow
+      void card.offsetWidth;
+      card.classList.add("wiggle");
+    }
+
+    noBtn.addEventListener("click", () => {
+      noClicks++;
+      growYes();
+      addNewNoOption();
+      wiggleCard();
+
+      // Also rotate through tiny guilt-trip subtitles (PG, cute)
+      const sub = document.querySelector(".sub");
+      const extras = [
+        "The puppy is staring at you with the saddest eyes imaginable.",
+        "The frog just whispered: “choose love.”",
+        "My heart is buffering… please select Yes to continue.",
+        "A committee of butterflies has entered the chat.",
+        "Breaking news: You are adorable."
+      ];
+      if (noClicks <= extras.length){
+        sub.textContent = extras[noClicks - 1];
+      }
+    });
+
+    function showYes(){
+      overlay.style.display = "grid";
+      // quick sparkle effect by adding more floaters
+      for (let i=0; i<10; i++){
+        const el = document.createElement("div");
+        el.className = "floater";
+        el.textContent = ["💖","✨","💐","🎉"][Math.floor(Math.random()*4)];
+        const x = rand(0, 100);
+        const dx = rand(-25, 25);
+        const dur = rand(6, 12);
+        el.style.left = x + "vw";
+        el.style.setProperty("--x", x + "vw");
+        el.style.setProperty("--dx", dx + "vw");
+        el.style.animationDuration = dur + "s";
+        el.style.animationDelay = "0s";
+        el.style.fontSize = rand(26, 70) + "px";
+        el.style.opacity = rand(0.65, 1);
+        layer.appendChild(el);
+      }
+    }
+
+    yesBtn.addEventListener("click", showYes);
+    closeBtn.addEventListener("click", () => overlay.style.display = "none");
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) overlay.style.display = "none";
+    });
+
+    // Start with one playful "no" option hidden until the first no click
+  </script>
+</body>
+</html>
