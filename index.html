@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>🐶🐸 Will you be my Valentine?</title>
   <meta name="description" content="A ridiculous Valentine page with floating puppies and frogs." />
   <style>
@@ -24,9 +24,10 @@
       font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
       color:var(--ink);
       overflow:hidden;
-      background: radial-gradient(circle at 20% 10%, #fff6fb 0 25%, transparent 26%),
-                  radial-gradient(circle at 80% 20%, #f3fffe 0 30%, transparent 31%),
-                  linear-gradient(135deg, var(--bg1), var(--bg2));
+      background:
+        radial-gradient(circle at 20% 10%, #fff6fb 0 25%, transparent 26%),
+        radial-gradient(circle at 80% 20%, #f3fffe 0 30%, transparent 31%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
     }
 
     /* Floating background */
@@ -39,7 +40,7 @@
     }
     .floater{
       position:absolute;
-      font-size: clamp(26px, 3.2vw, 56px);
+      font-size: clamp(22px, 4.5vw, 54px);
       opacity:.95;
       animation: drift linear infinite;
       transform: translate3d(0,0,0);
@@ -50,24 +51,28 @@
       to  { transform: translate3d(calc(var(--x) + var(--dx)), -30vh, 0) rotate(360deg); }
     }
 
-    /* Main layout */
+    /* Main layout (mobile-first) */
     .wrap{
       position:relative;
       height:100%;
       display:grid;
       place-items:center;
-      padding:24px;
+      padding: 16px;
     }
     .card{
-      width:min(680px, 96vw);
+      width:min(720px, 100%);
+      max-height: calc(100vh - 32px);
+      overflow:auto;
+      -webkit-overflow-scrolling: touch;
       background: var(--card);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255,255,255,.55);
-      border-radius: 26px;
+      border-radius: 22px;
       box-shadow: var(--shadow);
-      padding: clamp(18px, 3vw, 30px);
+      padding: clamp(16px, 4vw, 30px);
       text-align:center;
     }
+
     .badge{
       display:inline-flex;
       align-items:center;
@@ -76,73 +81,63 @@
       border-radius:999px;
       background: rgba(255,255,255,.7);
       border: 1px solid rgba(255,255,255,.7);
-      font-weight:700;
+      font-weight:800;
       letter-spacing:.2px;
+      font-size: 13px;
     }
+
     h1{
-      margin:14px 0 6px;
-      font-size: clamp(30px, 4.6vw, 54px);
+      margin:12px 0 6px;
+      font-size: clamp(28px, 6.2vw, 56px);
       line-height:1.05;
     }
     .sub{
-      margin:0 auto 18px;
-      max-width: 52ch;
-      font-size: clamp(14px, 2.2vw, 18px);
+      margin:0 auto 14px;
+      max-width: 54ch;
+      font-size: clamp(14px, 3.8vw, 18px);
+      line-height:1.4;
       opacity:.92;
     }
 
     .panel{
-      margin-top: 18px;
+      margin-top: 14px;
       background: var(--card2);
       border: 1px solid rgba(255,255,255,.8);
-      border-radius: 18px;
-      padding: 18px;
+      border-radius: 16px;
+      padding: 16px;
     }
 
-    .btnrow{
-      display:flex;
-      flex-wrap:wrap;
+    /* Button area */
+    .buttonStage{
+      margin-top: 14px;
+      display:grid;
       gap:12px;
-      justify-content:center;
-      margin-top:14px;
+      justify-items:center;
     }
+
+    /* Make buttons big & tappable on mobile */
     button{
       cursor:pointer;
       border:none;
       border-radius: 999px;
-      padding: 12px 18px;
+      padding: 14px 18px;
       font-size: 16px;
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing:.2px;
       transition: transform .08s ease, filter .2s ease;
       box-shadow: 0 10px 24px rgba(0,0,0,.12);
+      width: min(460px, 100%);
+      touch-action: manipulation;
     }
     button:active{ transform: scale(.98); }
     .yes{ background: var(--yes); color:white; }
     .no{ background: var(--no); color:white; }
 
     .tiny{
-      margin-top: 14px;
-      font-size: 13px;
+      margin-top: 12px;
+      font-size: 12px;
       opacity:.75;
     }
-
-    /* No-options area */
-    .noZone{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      justify-content:center;
-      margin-top: 14px;
-    }
-    .noChoice{
-      background: rgba(255,255,255,.9);
-      color:#111;
-      border: 1px solid rgba(0,0,0,.08);
-      box-shadow:none;
-      font-weight:800;
-    }
-    .noChoice:hover{ filter: brightness(1.03); }
 
     /* Success overlay */
     .overlay{
@@ -153,39 +148,46 @@
       background: rgba(0,0,0,.28);
       backdrop-filter: blur(6px);
       z-index: 10;
+      padding: 16px;
     }
     .modal{
-      width:min(720px, 94vw);
+      width:min(720px, 100%);
       background:white;
-      border-radius: 26px;
-      padding: 22px;
+      border-radius: 22px;
+      padding: 18px;
       box-shadow: 0 25px 80px rgba(0,0,0,.28);
       text-align:center;
     }
     .modal h2{
       margin: 10px 0 6px;
-      font-size: clamp(26px, 4.2vw, 44px);
+      font-size: clamp(24px, 6vw, 44px);
     }
     .modal p{
-      margin: 0 auto 14px;
-      max-width: 58ch;
+      margin: 0 auto 12px;
+      max-width: 60ch;
       opacity:.9;
       line-height:1.5;
+      font-size: clamp(14px, 3.8vw, 16px);
     }
     .confetti{
       font-size: 34px;
-      margin-top: 6px;
+      margin-top: 4px;
       user-select:none;
     }
 
-    /* Wiggle hint */
-    .wiggle{
-      animation: wiggle .5s ease-in-out 2;
-    }
+    /* Wiggle */
+    .wiggle{ animation: wiggle .5s ease-in-out 2; }
     @keyframes wiggle{
       0%,100%{ transform: rotate(0deg); }
-      25%{ transform: rotate(-3deg); }
-      75%{ transform: rotate(3deg); }
+      25%{ transform: rotate(-2.5deg); }
+      75%{ transform: rotate(2.5deg); }
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .floater{ animation: none; }
+      .wiggle{ animation: none; }
+      button{ transition: none; }
     }
   </style>
 </head>
@@ -198,26 +200,21 @@
       <div class="badge">💌 Official Valentine Application Form™ <span aria-hidden="true">🐶🐸</span></div>
 
       <h1>Will you be my Valentine?</h1>
-      <p class="sub">
-        I brought puppies for emotional support, frogs for vibes, and a highly unqualified legal team
-        who insists this page is “extremely persuasive.”
+      <p class="sub" id="subtitle">
+        I brought puppies for emotional support, frogs for vibes, and a very confident heart that says you’ll pick “Yes.”
       </p>
 
       <div class="panel">
         <div style="font-size:34px; line-height:1.2;">🐶💖🐸</div>
         <p class="sub" style="margin:10px auto 0;">
-          Please choose carefully. The “No” button is being audited and may experience… <b>feature creep</b>.
+          Tap an option below. (No pressure. Except the frogs. They’re very intense.)
         </p>
 
-        <div class="btnrow">
-          <button class="yes" id="yesBtn">Yes 💘</button>
-          <button class="no" id="noBtn">No 🙃</button>
-        </div>
-
-        <div class="noZone" id="noZone" aria-live="polite" aria-label="More options appear here"></div>
+        <!-- THIS gets replaced each time "No" is clicked -->
+        <div class="buttonStage" id="buttonStage" aria-live="polite"></div>
 
         <div class="tiny">
-          (By clicking anything, you agree to receive an unlimited supply of corny compliments.)
+          Legal note: by clicking anything, you agree to receive unlimited compliments and cute date ideas.
         </div>
       </div>
     </section>
@@ -232,26 +229,27 @@
         A puppy just did a backflip. A frog started slow-clapping. This is historic.
       </p>
       <p>
-        <b>Next steps:</b> I owe you snacks, a cute date, and absolutely zero (0) annoying “I told you so’s.” 😇
+        <b>Next steps:</b> I owe you snacks, a cute date, and exactly zero annoying “I told you so’s.” 😇
       </p>
-      <div class="btnrow">
+      <div class="buttonStage">
         <button class="yes" id="closeBtn">Close 💞</button>
       </div>
     </div>
   </div>
 
   <script>
-    // --- Floating puppies & frogs ---
+    // ---------- Floating puppies & frogs ----------
     const layer = document.getElementById("floatLayer");
-    const emojis = ["🐶","🐕","🐾","🐸","🐶","🐸","💖","✨"]; // weighted a bit
+    const emojis = ["🐶","🐕","🐾","🐸","🐶","🐸","💖","✨"];
     const floatCount = 26;
 
-    function rand(min, max){ return Math.random() * (max - min) + min; }
+    const rand = (min, max) => Math.random() * (max - min) + min;
 
     for (let i=0; i<floatCount; i++){
       const el = document.createElement("div");
       el.className = "floater";
       el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+
       const x = rand(0, 100);
       const dx = rand(-20, 20);
       const dur = rand(10, 22);
@@ -269,95 +267,46 @@
       layer.appendChild(el);
     }
 
-    // --- Valentine logic ---
-    const yesBtn = document.getElementById("yesBtn");
-    const noBtn  = document.getElementById("noBtn");
-    const noZone = document.getElementById("noZone");
+    // ---------- Valentine logic (replace buttons each "No") ----------
+    const stage = document.getElementById("buttonStage");
+    const subtitle = document.getElementById("subtitle");
     const overlay = document.getElementById("overlay");
-    const closeBtn = document.getElementById("closeBtn");
 
-    const noLines = [
-      "No… (but yes) 🥺",
+    const noProgression = [
+      "No 🙃",
       "No (I panicked) 😳",
       "No (misclick) 😅",
+      "No… but yes 🥺",
       "No, I will be your Valentine 💘",
-      "No, but you’re cute so… yes 😌",
       "No, but the puppies voted YES 🐶✅",
       "No, but the frogs filed an appeal 🐸📄",
       "No, but I already planned the snacks 🍟",
-      "No, but I’m literally smiling right now 😭",
+      "No, but I’m literally smiling 😭",
       "No, but yes, final answer 💞",
       "Ok fine YES (don’t look at me) 🙈",
       "YES (in all caps) YESSSSS ✨"
     ];
 
-    let noClicks = 0;
+    const subtitles = [
+      "The puppy is staring at you with the saddest eyes imaginable.",
+      "The frog just whispered: “choose love.”",
+      "My heart is buffering… please select Yes to continue.",
+      "A committee of butterflies has entered the chat.",
+      "Breaking news: You are adorable."
+    ];
 
-    function addNewNoOption(){
-      const label = noLines[Math.min(noClicks, noLines.length - 1)];
-      const btn = document.createElement("button");
-      btn.className = "noChoice";
-      btn.textContent = label;
-
-      // Clicking a "no" option also keeps escalating (and gently nudges toward Yes)
-      btn.addEventListener("click", () => {
-        noClicks++;
-        growYes();
-        addNewNoOption();
-        wiggleCard();
-      });
-
-      noZone.appendChild(btn);
-
-      // After a while, make it comically obvious
-      if (noClicks >= 6){
-        noBtn.textContent = "No (suspicious) 🕵️‍♀️";
-      }
-      if (noClicks >= 10){
-        noBtn.disabled = true;
-        noBtn.style.opacity = 0.55;
-        noBtn.style.cursor = "not-allowed";
-        noBtn.textContent = "No (retired) 🫡";
-      }
-    }
-
-    function growYes(){
-      // Increase the yes button size slightly each time (playful, not too obnoxious)
-      const scale = 1 + Math.min(noClicks, 12) * 0.06;
-      yesBtn.style.transform = `scale(${scale})`;
-    }
+    let step = 0;
 
     function wiggleCard(){
       const card = document.querySelector(".card");
       card.classList.remove("wiggle");
-      // Force reflow
       void card.offsetWidth;
       card.classList.add("wiggle");
     }
 
-    noBtn.addEventListener("click", () => {
-      noClicks++;
-      growYes();
-      addNewNoOption();
-      wiggleCard();
-
-      // Also rotate through tiny guilt-trip subtitles (PG, cute)
-      const sub = document.querySelector(".sub");
-      const extras = [
-        "The puppy is staring at you with the saddest eyes imaginable.",
-        "The frog just whispered: “choose love.”",
-        "My heart is buffering… please select Yes to continue.",
-        "A committee of butterflies has entered the chat.",
-        "Breaking news: You are adorable."
-      ];
-      if (noClicks <= extras.length){
-        sub.textContent = extras[noClicks - 1];
-      }
-    });
-
     function showYes(){
       overlay.style.display = "grid";
-      // quick sparkle effect by adding more floaters
+      // sparkle burst
       for (let i=0; i<10; i++){
         const el = document.createElement("div");
         el.className = "floater";
@@ -376,13 +325,57 @@
       }
     }
 
-    yesBtn.addEventListener("click", showYes);
-    closeBtn.addEventListener("click", () => overlay.style.display = "none");
+    function renderButtons(){
+      // clear old buttons (requirement)
+      stage.innerHTML = "";
+
+      // Yes button stays consistent (you can also make it more tempting later if you want)
+      const yesBtn = document.createElement("button");
+      yesBtn.className = "yes";
+      yesBtn.textContent = "Yes 💘";
+      yesBtn.addEventListener("click", showYes);
+
+      // No button text changes each time
+      const noBtn = document.createElement("button");
+      noBtn.className = "no";
+      const noLabel = noProgression[Math.min(step, noProgression.length - 1)];
+      noBtn.textContent = noLabel;
+
+      noBtn.addEventListener("click", () => {
+        step++;
+
+        // Update subtitle (cute guilt, nothing harsh)
+        if (step <= subtitles.length) {
+          subtitle.textContent = subtitles[step - 1];
+        } else {
+          subtitle.textContent = "At this point the frogs are drafting wedding invitations. (KIDDING… unless?) 🐸📝";
+        }
+
+        // Make Yes button grow a little each time (still mobile-friendly)
+        const scale = 1 + Math.min(step, 10) * 0.06;
+        yesBtn.style.transform = `scale(${scale})`;
+
+        wiggleCard();
+
+        // Re-render a BRAND NEW pair of Yes/No (old ones disappear)
+        renderButtons();
+      });
+
+      stage.appendChild(yesBtn);
+      stage.appendChild(noBtn);
+    }
+
+    renderButtons();
+
+    // Overlay close
+    document.addEventListener("click", (e) => {
+      if (e.target && e.target.id === "closeBtn") {
+        overlay.style.display = "none";
+      }
+    });
     overlay.addEventListener("click", (e) => {
       if (e.target === overlay) overlay.style.display = "none";
     });
-
-    // Start with one playful "no" option hidden until the first no click
   </script>
 </body>
 </html>
